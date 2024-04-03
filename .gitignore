@@ -6,6 +6,7 @@ __pycache__/
 src/temp
 src/database/user_data.json
 src/config.yaml
+src/predictor/inswapper_128.onnx
 
 # C extensions
 *.so

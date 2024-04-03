@@ -48,7 +48,6 @@ async def process_and_send_faces(message, file_path, response_data):
 
         draw.rectangle(bbox, outline="green", width=3)
 
-        gender = 1 if gender == 'Male' else 0
         cls = GENDER_1 if gender else GENDER_2
         text = f"{age}-летн{'ий' if gender else 'яя'} {cls if age < MIN_AGE else GENDER_3}"
         font_size = max((bbox[2] - bbox[0])//10, 20)
