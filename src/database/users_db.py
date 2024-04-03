@@ -1,7 +1,7 @@
 from tinydb import TinyDB, Query
 from datetime import datetime
 
-db = TinyDB('user_data.json')
+db = TinyDB('database/user_data.json')
 User = Query()
 
 
