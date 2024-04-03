@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "babka-na-lavke"
+version = "0.1.0"
+description = "Babka na lavke predicts your gender and age in a very specific way"
+authors = ["Dimildizio <42382713+Dimildizio@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.4.1"
+aiohttp = "^3.9.3"
+pillow = "^10.3.0"
+asyncio = "^3.4.3"
+tinydb = "^4.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
