@@ -1,33 +1,17 @@
 from aiogram import Bot, Dispatcher, types, F
 import aiohttp
-import io
-import os
-import json
-import sys
-from PIL import Image, ImageFont, ImageDraw
 import asyncio
+import io
+import json
+import os
+import sys
+
 from datetime import datetime
+from PIL import Image, ImageFont, ImageDraw
+
+from constants import TOKEN, GENDER_1, GENDER_2, GENDER_3, MIN_AGE, MIN_FONT, MAX_IMGS, FASTAPI_BASE_URL, IMAGE_DIR, \
+                       DELAY_BETWEEN_IMAGES, SENT_TIME
 from database.users_db import update_image_count, can_send_image
-
-from utils import get_yaml
-
-
-CONFIG = get_yaml()
-FASTAPI_BASE_URL = CONFIG['swapper']
-IMAGE_DIR = CONFIG['folder']
-TOKEN = CONFIG['token']
-DELAY_BETWEEN_IMAGES = int(CONFIG['delay'])
-MIN_AGE = int(CONFIG['min_age'])
-MIN_FONT = int(CONFIG['min_font'])
-MAX_IMGS = int(CONFIG['max_imgs'])
-GENDER_1 = CONFIG['g1']
-GENDER_2 = CONFIG['g2']
-GENDER_3 = CONFIG['g3']
-SENT_TIME = {}
-
-
-if not os.path.exists(IMAGE_DIR):
-    os.makedirs(IMAGE_DIR)
 
 
 bot = Bot(token=TOKEN)
@@ -50,7 +34,7 @@ async def process_and_send_faces(message, file_path, response_data):
 
         cls = GENDER_1 if gender else GENDER_2
         text = f"{age}-летн{'ий' if gender else 'яя'} {cls if age < MIN_AGE else GENDER_3}"
-        font_size = max((bbox[2] - bbox[0])//10, 20)
+        font_size = max((bbox[2] - bbox[0])//10, MIN_FONT)
         try:
             font = ImageFont.truetype("arial.ttf", font_size)
         except IOError:
