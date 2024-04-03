@@ -9,7 +9,7 @@ __pycache__/
 .env
 temp
 src/config.yaml
-database/users_db.py
+src/database/user_data.json
 
 # C extensions
 *.so
