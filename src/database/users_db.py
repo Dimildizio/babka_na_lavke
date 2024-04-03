@@ -48,3 +48,7 @@ def can_send_image(user_id, max_imgs):
     if user.get("date") == today and user.get("image_count", 0) >= max_imgs:
         return False
     return True
+
+def reset_image_counts():
+    # Logic to reset the image count for all users
+    db.update({'image_count': 0}, User.all())

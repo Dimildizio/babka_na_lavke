@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher, types, F
+import aiocron
 import aiohttp
 import asyncio
 import io
@@ -11,7 +12,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 from constants import TOKEN, GENDER_1, GENDER_2, GENDER_3, MIN_AGE, MIN_FONT, MAX_IMGS, FASTAPI_BASE_URL, IMAGE_DIR, \
                        DELAY_BETWEEN_IMAGES, SENT_TIME
-from database.users_db import update_image_count, can_send_image
+from database.users_db import update_image_count, can_send_image, reset_image_counts
 
 
 bot = Bot(token=TOKEN)
@@ -110,6 +111,12 @@ async def send_image_path_to_analyze_faces(file_path):
         except Exception as e:
             print(f"Failed to send image path to FastAPI: {e}")
             return None
+
+
+@aiocron.crontab('0 0 * * *')
+async def scheduled_reset():
+    reset_image_counts()
+    print("Image counts have been reset.")
 
 
 async def main():
