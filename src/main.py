@@ -33,34 +33,53 @@ async def process_and_send_faces(message, file_path, response_data):
     if not faces_data:
         return
 
+    await draw_image(faces_data, file_path)
+    await send_image(message, file_path)
+
+
+async def send_image(message, file_path):
+    result = types.FSInputFile(file_path)
+    await message.answer_photo(photo=result)
+
+
+async def draw_image(faces_data, file_path):
     image = Image.open(file_path)
     draw = ImageDraw.Draw(image)
+    await process_faces(faces_data, draw)
+    image.save(file_path, format='PNG')
 
 
+async def process_faces(faces_data, draw):
     for face in faces_data:
         age = int(face["age"])
         gender = face["gender"]
         bbox = face["bbox"]
 
-        draw.rectangle(bbox, outline="green", width=3)
-
         cls = GENDER_1 if gender else GENDER_2
         text = f"{age}-летн{'ий' if gender else 'яя'} {cls if age < MIN_AGE else GENDER_3}"
-        font_size = max((bbox[2] - bbox[0])//10, MIN_FONT)
-        try:
-            font = ImageFont.truetype("arial.ttf", font_size)
-        except IOError:
-            font = ImageFont.load_default()
 
-        x1, y1, x2, y2 = font.getbbox(text)
-        text_width, text_height = (x2-x1, y2-y1)
-        text_position = (bbox[0]-text_width//4, bbox[1] - 2*text_height)
-        draw.text(text_position, text, fill="red", font=font)
+        await draw_text(draw, bbox, text)
 
-    image.save(file_path, format='PNG')
-    result = types.FSInputFile(file_path)
-    if faces_data:
-        await message.answer_photo(photo=result)
+async def draw_text(draw, bbox, text):
+    font = await get_font(bbox)
+    draw.rectangle(bbox, outline="green", width=3)
+    text_position = await get_text_position(font, bbox, text)
+    draw.text(text_position, text, fill="red", font=font)
+
+
+async def get_text_position(font, bbox, text):
+    x1, y1, x2, y2 = font.getbbox(text)
+    text_width, text_height = (x2 - x1, y2 - y1)
+    text_position = (bbox[0] - text_width // 4, bbox[1] - 2 * text_height)
+    return text_position
+
+async def get_font(bbox):
+    font_size = max((bbox[2] - bbox[0]) // 10, MIN_FONT)
+    try:
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except IOError:
+        font = ImageFont.load_default()
+    return font
 
 
 async def prevent_multi_sending(message):
@@ -94,32 +113,47 @@ async def handle_text(message: types.Message):
     await message.answer("Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо")
 
 
-@dp.message(F.content_type == "photo")
-async def handle_image(message: types.Message):
-    if not (await block_message(message)):
-        return
-
+async def get_file_data(message):
     file_id = message.photo[-1].file_id
     file_info = await message.bot.get_file(file_id)
 
     file_url = f"https://api.telegram.org/file/bot{TOKEN}/{file_info.file_path}"
     input_path = os.path.join(IMAGE_DIR, f"{file_info.file_unique_id}.png")
     update_image_count(message, input_path)
+    return file_url, input_path
 
+
+async def download_image(message, response, input_path):
+    if response.status == 200:
+        content = await response.read()
+        orig = Image.open(io.BytesIO(content))
+        orig.save(input_path, format='PNG')
+        return input_path
+    else:
+        await message.answer("Шото ты не то шлешь такое! Не тыкай мне тут!")
+        print('Failed', response.status)
+        return
+
+
+async def handle_download(message):
+    file_url, input_path = await get_file_data(message)
     async with aiohttp.ClientSession() as session:
         async with session.get(file_url) as response:
-            if response.status == 200:
-                content = await response.read()
-                orig = Image.open(io.BytesIO(content))
-                orig.save(input_path, format='PNG')
-            else:
-                print('Failed', response.status)
-    response = await send_image_path_to_analyze_faces(input_path)
+            downloaded = await download_image(message, response, input_path)
+    return downloaded
 
-    if response:
-        await process_and_send_faces(message, input_path, response)
-    else:
-        await message.answer("Failed to analyze the image.")
+
+@dp.message(F.content_type == "photo")
+async def handle_image(message: types.Message):
+    if not (await block_message(message)):
+        return
+    input_path = await handle_download(message)
+    if input_path:
+        response = await send_image_path_to_analyze_faces(input_path)
+        if response:
+            await process_and_send_faces(message, input_path, response)
+        else:
+            await message.answer("Шота рожей ты не вышел! Кыш отседова!")
 
 
 async def send_image_path_to_analyze_faces(file_path):
