@@ -1,4 +1,3 @@
-from aiogram import Bot, Dispatcher, types, F
 import aiocron
 import aiohttp
 import asyncio
@@ -7,6 +6,8 @@ import json
 import os
 import sys
 
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters.command import Command
 from datetime import datetime
 from PIL import Image, ImageFont, ImageDraw
 
@@ -19,15 +20,25 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 
+async def get_faces(message, response_data):
+    response_data = json.loads(response_data)
+    if response_data.get("message", None):
+        await message.answer("Это хто тут такой ходить?! Не признать!!")
+        return
+    return response_data.get("faces", [])
+
+
 async def process_and_send_faces(message, file_path, response_data):
+    faces_data = await(get_faces(message, response_data))
+    if not faces_data:
+        return
+
     image = Image.open(file_path)
     draw = ImageDraw.Draw(image)
 
-    response_data = json.loads(response_data)
-    faces_data = response_data.get("faces", [])
 
     for face in faces_data:
-        age = face["age"]
+        age = int(face["age"])
         gender = face["gender"]
         bbox = face["bbox"]
 
@@ -41,8 +52,9 @@ async def process_and_send_faces(message, file_path, response_data):
         except IOError:
             font = ImageFont.load_default()
 
-        text_width, text_height = draw.textsize(text, font=font)
-        text_position = (bbox[0], bbox[1] - text_height)
+        x1, y1, x2, y2 = font.getbbox(text)
+        text_width, text_height = (x2-x1, y2-y1)
+        text_position = (bbox[0]-text_width//4, bbox[1] - 2*text_height)
         draw.text(text_position, text, fill="red", font=font)
 
     image.save(file_path, format='PNG')
@@ -69,6 +81,17 @@ async def block_message(message):
         await message.answer("Ходють тут ходють! Устала я, приходь завтра!")
         return
     return True
+
+
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    await message.answer("Хто тут ходить?! Покажи свое лицо!")
+
+
+
+@dp.message((F.text))
+async def handle_text(message: types.Message):
+    await message.answer("Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо")
 
 
 @dp.message(F.content_type == "photo")
