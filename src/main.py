@@ -60,6 +60,7 @@ async def process_faces(faces_data, draw):
 
         await draw_text(draw, bbox, text)
 
+
 async def draw_text(draw, bbox, text):
     font = await get_font(bbox)
     draw.rectangle(bbox, outline="green", width=3)
@@ -72,6 +73,7 @@ async def get_text_position(font, bbox, text):
     text_width, text_height = (x2 - x1, y2 - y1)
     text_position = (bbox[0] - text_width // 4, bbox[1] - 2 * text_height)
     return text_position
+
 
 async def get_font(bbox):
     font_size = max((bbox[2] - bbox[0]) // 10, MIN_FONT)
@@ -107,14 +109,13 @@ async def cmd_start(message: types.Message):
     await message.answer("Хто тут ходить?! Покажи свое лицо!")
 
 
-
-@dp.message((F.text))
+@dp.message(F.text)
 async def handle_text(message: types.Message):
     await message.answer("Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо")
 
 
-async def get_file_data(message):
-    file_id = message.photo[-1].file_id
+async def get_file_data(message, photo=True):
+    file_id = message.photo[-1].file_id if photo else message.document.file_id
     file_info = await message.bot.get_file(file_id)
 
     file_url = f"https://api.telegram.org/file/bot{TOKEN}/{file_info.file_path}"
@@ -132,22 +133,33 @@ async def download_image(message, response, input_path):
     else:
         await message.answer("Шото ты не то шлешь такое! Не тыкай мне тут!")
         print('Failed', response.status)
-        return
 
 
-async def handle_download(message):
-    file_url, input_path = await get_file_data(message)
+async def handle_download(message, photo=True):
+    file_url, input_path = await get_file_data(message, photo)
     async with aiohttp.ClientSession() as session:
         async with session.get(file_url) as response:
             downloaded = await download_image(message, response, input_path)
     return downloaded
 
 
+@dp.message(F.document)
+async def handle_doc(message: types.Message):
+    for ext in [".png", ".jpg", ".jpeg"]:
+        if ext in message.document.file_name:
+            await process_image(message, photo=False)
+            return
+
+
 @dp.message(F.content_type == "photo")
 async def handle_image(message: types.Message):
+    await process_image(message)
+
+
+async def process_image(message: types.Message, photo: bool = True):
     if not (await block_message(message)):
         return
-    input_path = await handle_download(message)
+    input_path = await handle_download(message, photo)
     if input_path:
         response = await send_image_path_to_analyze_faces(input_path)
         if response:
