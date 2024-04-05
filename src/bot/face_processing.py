@@ -5,7 +5,7 @@ from aiogram import types
 from PIL import Image, ImageFont, ImageDraw
 
 from bot import img_downloader, checks
-from bot.constants import GENDER_1, GENDER_2, GENDER_3, MIN_AGE, MIN_FONT, FASTAPI_BASE_URL
+from bot.constants import GENDER_1, GENDER_2, GENDER_3, GENDER_4, MIN_AGE, MAX_AGE, MIN_FONT, FASTAPI_BASE_URL
 
 
 async def get_faces(message, response_data):
@@ -34,10 +34,21 @@ async def process_faces(faces_data, draw):
         gender = face["gender"]
         bbox = face["bbox"]
 
-        cls = GENDER_1 if gender else GENDER_2
-        text = f"{age}-летн{'ий' if gender else 'яя'} {cls if age < MIN_AGE else GENDER_3}"
+        cls = await misgender(gender, age)
+        text = f"{age}-летн{'ий' if gender else 'яя'} {cls}"
 
         await draw_text(draw, bbox, text)
+
+
+async def misgender(gender, age):
+    if age < MIN_AGE:
+        return GENDER_4
+    elif age > MAX_AGE:
+        return GENDER_3
+    elif gender:
+        return GENDER_1
+    else:
+        return GENDER_2
 
 
 async def draw_text(draw, bbox, text):
@@ -95,4 +106,4 @@ async def process_image(message: types.Message, photo: bool = True):
         if response:
             await process_and_send_faces(message, input_path, response)
         else:
-            await message.answer("Шота рожей ты не вышел! Кыш отседова!")
+            await message.answer("Шота рожей ты не вышел! Канай отседова!")
