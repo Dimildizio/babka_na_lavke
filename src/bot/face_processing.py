@@ -61,9 +61,12 @@ async def draw_text(draw, bbox, text):
 async def get_text_position(font, bbox, text):
     x1, y1, x2, y2 = font.getbbox(text)
     text_width, text_height = (x2 - x1, y2 - y1)
-    text_position = (bbox[0] - text_width // 4, bbox[1] - 2 * text_height)
-    return text_position
 
+    bbox_center_x = bbox[0] + (bbox[2] - bbox[0]) / 2
+    text_position_x = bbox_center_x - text_width / 2
+    text_position_y = bbox[1] - text_height - 10
+
+    return (text_position_x, text_position_y)
 
 async def get_font(bbox):
     font_size = max((bbox[2] - bbox[0]) // 10, MIN_FONT)
