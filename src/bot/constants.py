@@ -15,6 +15,8 @@ GENDER_1 = CONFIG['g1']
 GENDER_2 = CONFIG['g2']
 GENDER_3 = CONFIG['g3']
 GENDER_4 =CONFIG['g4']
+TG = CONFIG['tg']
+GITHUB = CONFIG['github']
 SENT_TIME = {}
 
 

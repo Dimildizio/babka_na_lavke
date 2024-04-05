@@ -53,7 +53,7 @@ async def misgender(gender, age):
 
 async def draw_text(draw, bbox, text):
     font = await get_font(bbox)
-    draw.rectangle(bbox, outline="green", width=3)
+    draw.rectangle(bbox, outline="green", width=5)
     text_position = await get_text_position(font, bbox, text)
     draw.text(text_position, text, fill="red", font=font)
 

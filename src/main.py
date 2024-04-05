@@ -18,6 +18,17 @@ async def handle_start(message: types.Message):
     await message.answer("Хто тут ходить?! Покажи свое лицо!")
 
 
+@dp.message(Command("help"))
+async def handle_help(message: types.Message):
+    await message.answer("Пришли фоточку, диточка!")
+
+
+@dp.message(Command("contacts"))
+async def handle_help(message: types.Message):
+    await message.answer(f"Вот к этому наркоману обращайся:\ntg: @{constants.TG}\n{constants.GITHUB}")
+
+
+
 @dp.message(F.text)
 async def handle_text(message: types.Message):
     await message.answer("Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо")
