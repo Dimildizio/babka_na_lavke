@@ -24,11 +24,11 @@ async def send_image(message, file_path):
 async def draw_image(faces_data, file_path):
     image = Image.open(file_path)
     draw = ImageDraw.Draw(image)
-    await process_faces(faces_data, draw)
+    await process_faces(faces_data, draw, image.size)
     image.save(file_path, format='PNG')
 
 
-async def process_faces(faces_data, draw):
+async def process_faces(faces_data, draw, image_size):
     for face in faces_data:
         age = int(face["age"])
         gender = face["gender"]
@@ -37,7 +37,7 @@ async def process_faces(faces_data, draw):
         cls = await misgender(gender, age)
         text = f"{age}-летн{'ий' if gender else 'яя'} {cls}"
 
-        await draw_text(draw, bbox, text)
+        await draw_text(draw, bbox, text, image_size)
 
 
 async def misgender(gender, age):
@@ -51,29 +51,39 @@ async def misgender(gender, age):
         return GENDER_2
 
 
-async def draw_text(draw, bbox, text):
-    font = await get_font(bbox)
+async def draw_text(draw, bbox, text, image_size):
+    font = await get_font(bbox, text, image_size)
     draw.rectangle(bbox, outline="green", width=5)
-    text_position = await get_text_position(font, bbox, text)
+    text_position = await get_text_position(font, bbox, text, image_size)
     draw.text(text_position, text, fill="red", font=font)
 
 
-async def get_text_position(font, bbox, text):
-    x1, y1, x2, y2 = font.getbbox(text)
-    text_width, text_height = (x2 - x1, y2 - y1)
+async def get_text_position(font, bbox, text, image_size):
+    text_width, text_height = await gettext_size(font, text)
 
     bbox_center_x = bbox[0] + (bbox[2] - bbox[0]) / 2
-    text_position_x = bbox_center_x - text_width / 2
-    text_position_y = bbox[1] - text_height - 10
+    text_position_x = min(max(0, bbox_center_x - text_width / 2), image_size[0] - text_width)
+    text_position_y = max(text_height, bbox[1] - text_height - 10)
 
-    return (text_position_x, text_position_y)
+    return text_position_x, text_position_y
 
-async def get_font(bbox):
+
+async def gettext_size(font, text):
+    x1, y1, x2, y2 = font.getbbox(text)
+    text_width, text_height = (x2 - x1, y2 - y1)
+    return text_width, text_height
+
+
+async def get_font(bbox, text, image_size):
     font_size = max((bbox[2] - bbox[0]) // 10, MIN_FONT)
-    try:
+
+    font = ImageFont.truetype("arial.ttf", font_size)
+    text_width, text_height = await gettext_size(font, text)
+
+    while text_width > image_size[0] and font_size > 1:
+        font_size -= 3
         font = ImageFont.truetype("arial.ttf", font_size)
-    except IOError:
-        font = ImageFont.load_default()
+        text_width, text_height = await gettext_size(font, text)
     return font
 
 

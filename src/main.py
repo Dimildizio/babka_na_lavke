@@ -25,8 +25,8 @@ async def handle_help(message: types.Message):
 
 @dp.message(Command("contacts"))
 async def handle_help(message: types.Message):
-    await message.answer(f"Вот к этому наркоману обращайся:\ntg: @{constants.TG}\n{constants.GITHUB}")
-
+    await message.answer(f"Вот к этому наркоману обращайся:\ntg: @{constants.TG}"
+                         f"(открыт для вакансий)\ngithub: {constants.GITHUB}\npublic: @{constants.TGPUBLIC}")
 
 
 @dp.message(F.text)
