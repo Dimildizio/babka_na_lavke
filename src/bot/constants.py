@@ -18,6 +18,7 @@ GENDER_4 = CONFIG['g4']
 TG = CONFIG['tg']
 TGPUBLIC = CONFIG['tgpublic']
 GITHUB = CONFIG['github']
+ADJUFACE = CONFIG['adjuface']
 SENT_TIME = {}
 
 
