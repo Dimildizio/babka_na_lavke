@@ -1,3 +1,4 @@
+import aiogram.exceptions
 import aiohttp
 import json
 
@@ -17,15 +18,22 @@ async def get_faces(message, response_data):
 
 
 async def send_image(message, file_path):
-    result = types.FSInputFile(file_path)
-    await message.answer_photo(photo=result)
+    try:
+        result = types.FSInputFile(file_path)
+        await message.answer_photo(photo=result)
+    except aiogram.exceptions.TelegramBadRequest:
+        await message.answer("Эка чудная чудь! Не нравится она мне! Давай другую")
 
 
 async def draw_image(faces_data, file_path):
     image = Image.open(file_path)
     draw = ImageDraw.Draw(image)
     await process_faces(faces_data, draw, image.size)
-    image.save(file_path, format='PNG')
+    try:
+        image.save(file_path, format='PNG')
+        return True
+    except PermissionError:
+        return False
 
 
 async def process_faces(faces_data, draw, image_size):
@@ -91,9 +99,10 @@ async def process_and_send_faces(message, file_path, response_data):
     faces_data = await(get_faces(message, response_data))
     if not faces_data:
         return
-
-    await draw_image(faces_data, file_path)
-    await send_image(message, file_path)
+    if await draw_image(faces_data, file_path):
+        await send_image(message, file_path)
+    else:
+        await message.answer("Шота не разобрать! А ну еще раз!")
 
 
 async def send_image_path_to_analyze_faces(file_path):
