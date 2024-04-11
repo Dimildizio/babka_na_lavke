@@ -35,7 +35,7 @@ def update_image_count(message, input_path):
     else:
         user_data['user_id'] = user_id
         db.insert(user_data)
-    print(existing_user)
+    print(existing_user if existing_user else user_data)
 
 
 def can_send_image(user_id, max_imgs):
@@ -53,3 +53,13 @@ def can_send_image(user_id, max_imgs):
 def reset_image_counts():
     # Logic to reset the image count for all users
     db.update({'image_count': 0}, User.all())
+
+
+def count_unique_users():
+    unique_users = set()
+    all_users = db.all()
+    for user_data in all_users:
+        user_id = user_data.get('user_id')
+        if user_id:
+            unique_users.add(user_id)
+    return len(unique_users)

@@ -6,11 +6,16 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
 
 from bot import constants, face_processing
-from database.users_db import reset_image_counts
+from database.users_db import reset_image_counts, count_unique_users
 
 
 bot = Bot(token=constants.TOKEN)
 dp = Dispatcher()
+
+
+@dp.message(Command("utils"))
+async def handle_utils(message: types.Message):
+    await message.answer(f'num: {count_unique_users()}')
 
 
 @dp.message(Command("start"))
