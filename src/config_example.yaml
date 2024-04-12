@@ -6,11 +6,8 @@ min_age: 18
 max_age: 55
 min_font: 30
 max_imgs: 50
-g1: gender_1
-g2: gender_2
-g3: gender_3
-g4: gender_4
+lang: en
 tg:
 tgpublic: oaiohmy
 adjuface: Adjuface_bot
-github: https://github.com/Dimildizio/babka_na_lavke
+github: https://github.com/Dimildizio/neuro_granny

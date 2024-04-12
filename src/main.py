@@ -8,7 +8,7 @@ from aiogram.filters.command import Command
 from bot import constants, face_processing
 from bot.constants import TXT
 from database.users_db import reset_image_counts, count_unique_users
-
+from utils import get_user_info
 
 bot = Bot(token=constants.TOKEN)
 dp = Dispatcher()
@@ -33,8 +33,8 @@ async def handle_help(message: types.Message):
 
 @dp.message(Command("contacts"))
 async def handle_help(message: types.Message):
-    user = message.from_user
-    print(f"{user.id}{user.username} {user.first_name} {user.last_name} requested contacts")
+    info = await get_user_info(message)
+    print(f"{info} requested contacts")
     text = TXT['contact_me'].format(tg=constants.TG, public=constants.TGPUBLIC,
                                    adjuface=constants.ADJUFACE, github=constants.GITHUB)
     await message.answer(text)
@@ -42,6 +42,8 @@ async def handle_help(message: types.Message):
 
 @dp.message(F.text)
 async def handle_text(message: types.Message):
+    info = await get_user_info(message)
+    print(f"{info}: {message.text}")
     await message.answer(TXT['please_no_text'])
 
 

@@ -21,3 +21,8 @@ def get_localization(filename: str = 'localization.json', lang='ru') -> Dict[str
     with open(filename, 'r', encoding='utf-8') as f:
         config = json.load(f)
     return config[lang]
+
+async def get_user_info(message):
+    user = message.from_user
+    info = (f"{user.id} {user.username} {user.first_name} {user.last_name}")
+    return info
