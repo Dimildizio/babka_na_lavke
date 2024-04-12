@@ -1,11 +1,11 @@
-# Babka na lavke - Telegram face detector, age and misgender classification
+# Neuro Granny - Telegram face detector, age and misgender classification
 
-![babuskas](https://github.com/Dimildizio/babka_na_lavke/assets/42382713/fe8663d1-ef9c-43d9-9508-bdb0e1c49488)
+![babuskas](https://github.com/Dimildizio/neuro_granny/assets/42382713/fe8663d1-ef9c-43d9-9508-bdb0e1c49488)
 
 
 In our modern world where technology advances at an incredible pace, we often lose touch with the simple yet soulful things from the past. Who doesn't recall the scene from their childhood: the old Khrushchyovka buildings, the cozy courtyards, and, of course, the grandmother on the bench, watching over everyone and calling things the way they actually are. Times change, no more grandmas sitting next to the soulless apartment buildings, however thanks to the latest developments in artificial intelligence, we've found a way to recreate that atmosphere.
 
-Babka na lavke is a Telegram bot that allows users to detect faces and misgender them in images.
+Neuro Granny is a Telegram bot that allows users to detect faces and misgender them in images.
 
 
 
@@ -27,7 +27,7 @@ Babka na lavke is a Telegram bot that allows users to detect faces and misgender
 
 ### Prerequisites
 
-To run Babka locally or on your own server, you will need the following:
+To run Granny locally or on your own server, you will need the following:
 
 - Python 3.10+
 - Microsoft Visual C++ 14 Build tools 
@@ -40,7 +40,7 @@ To run Babka locally or on your own server, you will need the following:
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/Dimildizio/babka_na_lavke.git
+   git clone https://github.com/Dimildizio/neuro_granny.git
 
 2. Install dependencies:
 
@@ -51,7 +51,7 @@ Use poetry for that.
 
 
 4. Create a **config.yaml** file in the project directory and add your token and other necessary data.
-  You can find an example of **config.yaml** [here](https://github.com/Dimildizio/babka_na_lavke/blob/main/src/config_example.yaml)
+  You can find an example of **config.yaml** [here](https://github.com/Dimildizio/neuro_granny/blob/main/src/config_example.yaml) (All credits go to the `deepinsight` team)
 
 5. Go to the /predictor folder, put your onnx file there (default is inswapper_128.oonx) and run Fast API
    ```shell
@@ -65,11 +65,11 @@ Use poetry for that.
 
 ### **Commands**
 
-Babka supports several commands that users can send in their Telegram chats to interact with the bot. Here are some common commands:
+Granny supports several commands that users can send in their Telegram chats to interact with the bot. Here are some common commands:
 
 - `/start`: Start the bot.
 
-One is supposed to send images with faces on it to Babka. Babka is deaf so she won't listen to anything you say and of course she is already too blind to read.
+One is supposed to send images with faces on it to Granny. Granny is deaf so she won't listen to anything you say and of course she is already too blind to read.
 
 ### **Face Classification**
 
@@ -80,12 +80,12 @@ To classify faces in an image, simply send a photo to the bot. If the image cont
 
 Here are some examples of face detection and misgendering:
 
-![babka_classificator](https://github.com/Dimildizio/babka_na_lavke/assets/42382713/5fada100-20f3-4f41-bd17-c2f66f4a0b16)
+![babka_classificator](https://github.com/Dimildizio/neuro_granny/assets/42382713/5fada100-20f3-4f41-bd17-c2f66f4a0b16)
 
 
 ## **Contributing**
 
-Contributions to Babka are not welcome! It is a humorous project that is not going to be supported, however if you have ideas for improvements, bug reports, or feature requests, please open an issue.
+Contributions to Granny are not welcome! It is a humorous project that is not going to be supported, however if you have ideas for improvements, bug reports, or feature requests, please open an issue.
 
 ## **License**
 
