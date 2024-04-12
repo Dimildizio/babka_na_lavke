@@ -6,13 +6,13 @@ from aiogram import types
 from PIL import Image, ImageFont, ImageDraw
 
 from bot import img_downloader, checks
-from bot.constants import GENDER_1, GENDER_2, GENDER_3, GENDER_4, MIN_AGE, MAX_AGE, MIN_FONT, FASTAPI_BASE_URL
+from bot.constants import MIN_AGE, MAX_AGE, MIN_FONT, FASTAPI_BASE_URL, TXT
 
 
 async def get_faces(message, response_data):
     response_data = json.loads(response_data)
     if response_data.get("message", None):
-        await message.answer("Это хто тут такой ходить?! Не признать!!")
+        await message.answer(TXT['no_face'])
         return
     return response_data.get("faces", [])
 
@@ -22,7 +22,7 @@ async def send_image(message, file_path):
         result = types.FSInputFile(file_path)
         await message.answer_photo(photo=result)
     except aiogram.exceptions.TelegramBadRequest:
-        await message.answer("Эка чудная чудь! Не нравится она мне! Давай другую")
+        await message.answer("try_again")
 
 
 async def draw_image(faces_data, file_path):
@@ -43,20 +43,20 @@ async def process_faces(faces_data, draw, image_size):
         bbox = face["bbox"]
 
         cls = await misgender(gender, age)
-        text = f"{age}-летн{'ий' if gender else 'яя'} {cls}"
+        text = f"{age}-{TXT['text_year']}{TXT['text_g1'] if gender else TXT['text_g2']} {cls}"
 
         await draw_text(draw, bbox, text, image_size)
 
 
 async def misgender(gender, age):
     if age < MIN_AGE:
-        return GENDER_4
+        return TXT['gender_4']
     elif age > MAX_AGE:
-        return GENDER_3
-    elif gender:
-        return GENDER_1
+        return TXT['gender_3']
+    elif not gender:
+        return TXT['gender_2']
     else:
-        return GENDER_2
+        return TXT['gender_1']
 
 
 async def draw_text(draw, bbox, text, image_size):
@@ -84,13 +84,13 @@ async def gettext_size(font, text):
 
 async def get_font(bbox, text, image_size):
     font_size = max((bbox[2] - bbox[0]) // 10, MIN_FONT)
-
-    font = ImageFont.truetype("arial.ttf", font_size)
+    fontname = "arial.ttf"
+    font = ImageFont.truetype(fontname, font_size)
     text_width, text_height = await gettext_size(font, text)
 
     while text_width > image_size[0] and font_size > 1:
         font_size -= 3
-        font = ImageFont.truetype("arial.ttf", font_size)
+        font = ImageFont.truetype(fontname, font_size)
         text_width, text_height = await gettext_size(font, text)
     return font
 
@@ -102,7 +102,7 @@ async def process_and_send_faces(message, file_path, response_data):
     if await draw_image(faces_data, file_path):
         await send_image(message, file_path)
     else:
-        await message.answer("Шота не разобрать! А ну еще раз!")
+        await message.answer(TXT['try_again'])
 
 
 async def send_image_path_to_analyze_faces(file_path):
@@ -128,4 +128,4 @@ async def process_image(message: types.Message, photo: bool = True):
         if response:
             await process_and_send_faces(message, input_path, response)
         else:
-            await message.answer("Шота рожей ты не вышел! Канай отседова!")
+            await message.answer(TXT['bad_response'])

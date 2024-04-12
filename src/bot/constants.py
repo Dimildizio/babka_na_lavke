@@ -1,5 +1,5 @@
 import os
-from utils import get_yaml
+from utils import get_yaml, get_localization
 
 
 CONFIG = get_yaml()
@@ -11,16 +11,14 @@ MIN_AGE = int(CONFIG['min_age'])
 MAX_AGE = int(CONFIG['max_age'])
 MIN_FONT = int(CONFIG['min_font'])
 MAX_IMGS = int(CONFIG['max_imgs'])
-GENDER_1 = CONFIG['g1']
-GENDER_2 = CONFIG['g2']
-GENDER_3 = CONFIG['g3']
-GENDER_4 = CONFIG['g4']
+
 TG = CONFIG['tg']
 TGPUBLIC = CONFIG['tgpublic']
 GITHUB = CONFIG['github']
 ADJUFACE = CONFIG['adjuface']
 SENT_TIME = {}
 
+TXT = get_localization(lang='en')
 
 if not os.path.exists(IMAGE_DIR):
     os.makedirs(IMAGE_DIR)

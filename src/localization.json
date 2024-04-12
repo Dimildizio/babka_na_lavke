@@ -1,0 +1,40 @@
+{
+  "ru": {
+    "welcome": "Хто тут ходить?! Покажи свое лицо!",
+    "help": "Пришли фоточку, диточка!",
+    "contact_me": "Вот к этому наркоману обращайся:\n\ntg: @{tg} (открыт для вакансий)\n\nПаблик про нейросети: @{public}\n\nБот для замены лиц: @{adjuface}\n\ngithub: {github}",
+    "please_no_text": "Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо",
+    "wrong_doc": "Шото ты не то шлешь такое! Не тыкай мне тут!",
+    "too_soon": "Ишь какой шустрый! Обожди немного!",
+    "limit": "Ходють тут ходють! Устала я, приходь завтра!",
+    "no_face": "Это хто тут такой ходить?! Не признать!!",
+    "try_again": "Эка чудная чудь! Не нравится она мне! Давай другую",
+    "bad_response": "Шота рожей ты не вышел! Канай отседова!",
+    "text_year": "летн",
+    "text_g2" : "яя",
+    "text_g1": "ий",
+    "gender_1": "наркоман",
+    "gender_2": "проститутка",
+    "gender_3": "соседушка",
+    "gender_": "дитятка"
+  },
+  "en": {
+    "welcome": "Hoo dat?! Show yar face!",
+    "help": "Send you photo, darling!",
+    "contact_me": "Talk to diz dope fiend:\n\ntg: @{tg} (open for hire)\n\nNeural networks TG channel: @{public}\n\nSwap face bot: @{adjuface}\n\ngithub: {github}",
+    "please_no_text": "WUT?! Can't see anything! Show ya face",
+    "wrong_doc": "Dafuq is dat?! I'm in no mood for this nonsense!",
+    "too_soon": "Honey you're too fast for my age! Wait a while!",
+    "limit": "Nana grew tired of you, Cupcake! Come back tomorrow!",
+    "no_face": " WUT iz dat? I see no face!",
+    "try_again": "WUT?! Don't like it! try again",
+    "bad_response": "My eyes hurt watching it! Get lost!",
+    "text_year": "year old",
+    "text_g2" : "",
+    "text_g1": "",
+    "gender_1": "junkie",
+    "gender_2": "whore",
+    "gender_3": "sweetheart",
+    "gender_4": "sweetie"
+  }
+}

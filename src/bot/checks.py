@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bot.constants import SENT_TIME, DELAY_BETWEEN_IMAGES, MAX_IMGS
+from bot.constants import SENT_TIME, DELAY_BETWEEN_IMAGES, MAX_IMGS, TXT
 from database.users_db import can_send_image
 
 
@@ -16,9 +16,9 @@ async def prevent_multi_sending(message):
 
 async def block_message(message):
     if not await prevent_multi_sending(message):
-        await message.answer("Ишь какой шустрый! Обожди немного!")
+        await message.answer(TXT['too_soon'])
         return
     if not can_send_image(message.from_user.id, MAX_IMGS):
-        await message.answer("Ходють тут ходють! Устала я, приходь завтра!")
+        await message.answer(TXT['limit'])
         return
     return True

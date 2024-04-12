@@ -50,9 +50,13 @@ def can_send_image(user_id, max_imgs):
     return True
 
 
-def reset_image_counts():
+def reset_image_counts(tg_id=None):
     # Logic to reset the image count for all users
-    db.update({'image_count': 0}, User.all())
+    if tg_id is None:
+        db.update({'image_count': 0}, User.all())
+    else:
+        db.update({'image_count': 0}, User.user_id==tg_id)
+
 
 
 def count_unique_users():

@@ -4,7 +4,7 @@ import os
 
 from PIL import Image
 
-from bot.constants import TOKEN, IMAGE_DIR
+from bot.constants import TOKEN, IMAGE_DIR, TXT
 from database.users_db import update_image_count
 
 
@@ -25,7 +25,7 @@ async def download_image(message, response, input_path):
         orig.save(input_path, format='PNG')
         return input_path
     else:
-        await message.answer("Шото ты не то шлешь такое! Не тыкай мне тут!")
+        await message.answer(TXT['bad_response'])
         print('Failed', response.status)
 
 
