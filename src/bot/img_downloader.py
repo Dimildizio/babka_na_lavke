@@ -13,7 +13,7 @@ async def get_file_data(message, photo=True):
     file_info = await message.bot.get_file(file_id)
 
     file_url = f"https://api.telegram.org/file/bot{TOKEN}/{file_info.file_path}"
-    input_path = os.path.join(IMAGE_DIR, f"{file_info.file_unique_id}.png")
+    input_path = os.path.join(IMAGE_DIR, f"{file_info.file_unique_id}_{str(message.from_user.id)}.png")
     update_image_count(message, input_path)
     return file_url, input_path
 

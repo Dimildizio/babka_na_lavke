@@ -7,6 +7,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 from bot import img_downloader, checks
 from bot.constants import MIN_AGE, MAX_AGE, MIN_FONT, FASTAPI_BASE_URL, TXT
+from utils import savefile
 
 
 async def get_faces(message, response_data):
@@ -22,18 +23,14 @@ async def send_image(message, file_path):
         result = types.FSInputFile(file_path)
         await message.answer_photo(photo=result)
     except aiogram.exceptions.TelegramBadRequest:
-        await message.answer("try_again")
+        await message.answer(TXT["try_again"])
 
 
 async def draw_image(faces_data, file_path):
     image = Image.open(file_path)
     draw = ImageDraw.Draw(image)
     await process_faces(faces_data, draw, image.size)
-    try:
-        image.save(file_path, format='PNG')
-        return True
-    except PermissionError:
-        return False
+    return await savefile(image, file_path)
 
 
 async def process_faces(faces_data, draw, image_size):
@@ -99,8 +96,9 @@ async def process_and_send_faces(message, file_path, response_data):
     faces_data = await(get_faces(message, response_data))
     if not faces_data:
         return
-    if await draw_image(faces_data, file_path):
-        await send_image(message, file_path)
+    new_filename = await draw_image(faces_data, file_path)
+    if new_filename:
+        await send_image(message, new_filename)
     else:
         await message.answer(TXT['try_again'])
 
