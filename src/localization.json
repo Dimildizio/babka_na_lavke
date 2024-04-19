@@ -1,7 +1,7 @@
 {
   "ru": {
     "welcome": "Хто тут ходить?! Покажи свое лицо!",
-    "help": "Пришли фоточку, диточка!",
+    "help": "Пришли фоточку, диточка! \nИшшо можешь так:\n\t/lang - бабуля может и по-басурмански\n\t/contacts - главный под поъезду",
     "contact_me": "Вот к этому наркоману обращайся:\n\ntg: @{tg} (открыт для вакансий)\n\nПаблик про нейросети: @{public}\n\nБот для замены лиц: @{adjuface}\n\ngithub: {github}",
     "please_no_text": "Ась? Глухая я стала. Не слышу ничаво. Покажи свое лицо",
     "wrong_doc": "Шото ты не то шлешь такое! Не тыкай мне тут!",
@@ -16,11 +16,13 @@
     "gender_1": "наркоман",
     "gender_2": "проститутка",
     "gender_3": "соседушка",
-    "gender_4": "дитятка"
+    "gender_4": "дитятка",
+    "gender_5": "лапушка",
+    "lang": "Уфф, устала я от басурманской речи. Давай на Великом и Могучем, дорогуша"
   },
   "en": {
     "welcome": "Hoo dat?! Show yar face!",
-    "help": "Send you photo, darling!",
+    "help": "Send you photo, darling! You also can use: \n\t/lang - Nana can into Russian\n\t/contact -get in touch with the dope fiend",
     "contact_me": "Talk to diz dope fiend:\n\ntg: @{tg} (open for hire)\n\nNeural networks TG channel: @{public}\n\nSwap face bot: @{adjuface}\n\ngithub: {github}",
     "please_no_text": "WUT?! Can't see anything! Show ya face",
     "wrong_doc": "Dafuq is dat?! I'm in no mood for this nonsense!",
@@ -35,6 +37,8 @@
     "gender_1": "junkie",
     "gender_2": "whore",
     "gender_3": "sweetheart",
-    "gender_4": "sweetie"
+    "gender_4": "sweetie",
+    "gender_5": "cupcake",
+    "lang": "English, my darling, do you speak it?!"
   }
 }

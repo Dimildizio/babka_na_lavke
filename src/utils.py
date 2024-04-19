@@ -15,7 +15,7 @@ def get_yaml(filename='config.yaml') -> Dict[str, str]:
     return config
 
 
-def get_localization(filename: str = 'localization.json', lang='ru') -> Dict[str, str]:
+def get_localization(filename: str = 'localization.json') -> Dict[str, str]:
     """
     Get info from a json file.
 
@@ -23,7 +23,7 @@ def get_localization(filename: str = 'localization.json', lang='ru') -> Dict[str
     """
     with open(filename, 'r', encoding='utf-8') as f:
         config = json.load(f)
-    return config[lang]
+    return config
 
 
 async def get_user_info(message):

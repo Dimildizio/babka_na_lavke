@@ -18,7 +18,7 @@ GITHUB = CONFIG['github']
 ADJUFACE = CONFIG['adjuface']
 SENT_TIME = {}
 
-TXT = get_localization(lang=CONFIG['lang'])
+TXT = get_localization()
 
 if not os.path.exists(IMAGE_DIR):
     os.makedirs(IMAGE_DIR)

@@ -9,7 +9,7 @@ def get_user(user_id):
     return db.search(User.user_id == user_id)
 
 
-def update_image_count(message, input_path):
+def create_userdata(message, image_count=''):
     user = message.from_user
     user_id = user.id
     username = user.username  # Can be None
@@ -18,12 +18,22 @@ def update_image_count(message, input_path):
     today = datetime.now().date().isoformat()
 
     user_data = {
+        'user_id': user_id,
         'username': username,
         'first_name': first_name,
         'last_name': last_name,
-        'image_count': 1,
+        'image_count': 0,
         'date': today,
-        'input_path': input_path}
+        'input_path': image_count}
+    if not image_count:
+        user_data['lang'] = message.from_user.language_code
+    return user_data
+
+
+def update_image_count(message, input_path):
+    user_id = message.from_user.id
+    today = datetime.now().date().isoformat()
+    user_data = create_userdata(message, input_path)
 
     existing_user = get_user(user_id)
     if existing_user:
@@ -34,8 +44,14 @@ def update_image_count(message, input_path):
         db.update(user_data, User.user_id == user_id)
     else:
         user_data['user_id'] = user_id
+        user_data['lang'] = message.from_user.language_code
         db.insert(user_data)
     print(existing_user if existing_user else user_data)
+
+
+def create_user(message):
+    user_data = create_userdata(message)
+    db.insert(user_data)
 
 
 def can_send_image(user_id, max_imgs):
@@ -55,8 +71,7 @@ def reset_image_counts(tg_id=None):
     if tg_id is None:
         db.update({'image_count': 0}, User.all())
     else:
-        db.update({'image_count': 0}, User.user_id==tg_id)
-
+        db.update({'image_count': 0}, User.user_id == tg_id)
 
 
 def count_unique_users():
@@ -67,3 +82,14 @@ def count_unique_users():
         if user_id:
             unique_users.add(user_id)
     return len(unique_users)
+
+
+def update_lang_db(user_id, lang):
+    db.update({'lang': lang}, User.user_id == user_id)
+
+
+def get_lang(message):
+    user_data = get_user(message.from_user.id)
+    if user_data:
+        return user_data[0].get('lang', 'ru')
+    return 'ru'

@@ -18,20 +18,20 @@ async def get_file_data(message, photo=True):
     return file_url, input_path
 
 
-async def download_image(message, response, input_path):
+async def download_image(message, response, input_path, lang):
     if response.status == 200:
         content = await response.read()
         orig = Image.open(io.BytesIO(content))
         orig.save(input_path, format='PNG')
         return input_path
     else:
-        await message.answer(TXT['bad_response'])
+        await message.answer(TXT[lang]['bad_response'])
         print('Failed', response.status)
 
 
-async def handle_download(message, photo=True):
+async def handle_download(message, photo=True, lang='ru'):
     file_url, input_path = await get_file_data(message, photo)
     async with aiohttp.ClientSession() as session:
         async with session.get(file_url) as response:
-            downloaded = await download_image(message, response, input_path)
+            downloaded = await download_image(message, response, input_path, lang)
     return downloaded
