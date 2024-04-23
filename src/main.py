@@ -53,12 +53,17 @@ async def handle_help(message: types.Message):
 
 @dp.message(F.text)
 async def handle_text(message: types.Message):
+    if message.chat.type in ['group', 'supergroup']:
+        # Optionally, you can log that a message was ignored
+        print(f"Ignored message from {message.chat.type}: {message.text}")
+        return  # Ignore message
     info = await get_user_info(message)
     lang = get_lang(message)
     print(f"{info}: {message.text}")
     if 'лапушка' in message.text.lower():
         return await message.answer("Лапушка - значит у бабули есть любимчики. Я тебя запомнила")
-    await message.answer(TXT[lang]['please_no_text'])
+    if lang:
+        await message.answer(TXT[lang]['please_no_text'])
 
 
 @dp.message(F.document)
@@ -85,7 +90,8 @@ async def scheduled_reset():
 
 
 async def main():
-    await dp.start_polling(bot)
+    await bot.get_updates(offset=-1)
+    await dp.start_polling(bot, skip_updates=True)
 
 
 if __name__ == "__main__":
