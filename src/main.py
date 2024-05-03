@@ -55,7 +55,8 @@ async def handle_help(message: types.Message):
 async def handle_text(message: types.Message):
     if message.chat.type in ['group', 'supergroup']:
         # Optionally, you can log that a message was ignored
-        print(f"Ignored message from {message.chat.type}: {message.text}")
+        print(f"Ignored message from {message.chat.type} {message.from_user.id} "
+              f"{message.from_user.username} {message.from_user.first_name} {message.from_user.last_name}: {message.text}")
         return  # Ignore message
     info = await get_user_info(message)
     lang = get_lang(message)

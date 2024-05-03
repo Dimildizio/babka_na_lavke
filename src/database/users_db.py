@@ -91,5 +91,5 @@ def update_lang_db(user_id, lang):
 def get_lang(message):
     user_data = get_user(message.from_user.id)
     if user_data:
-        return user_data[0].get('lang', 'ru')
+        return user_data[0].get('lang', 'ru') or 'ru'
     return 'ru'
